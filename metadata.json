@@ -1,0 +1,7 @@
+{
+  "name": "AI Outfit Studio",
+  "description": "An advanced AI-powered platform for outfit swapping, image editing, and professional image generation using Gemini Nano Banana and Pro models.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
