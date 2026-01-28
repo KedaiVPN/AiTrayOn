@@ -11,7 +11,7 @@ export const outfitSwap = async (target: ImageData, outfit: ImageData): Promise<
   const ai = new GoogleGenAI({ apiKey });
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-2.0-flash',
     contents: {
       parts: [
         {
@@ -51,7 +51,7 @@ export const editImageWithText = async (image: ImageData, prompt: string): Promi
   const ai = new GoogleGenAI({ apiKey });
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-2.0-flash',
     contents: {
       parts: [
         {
