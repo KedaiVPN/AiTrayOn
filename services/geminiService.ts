@@ -3,7 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { ImageData } from "../types";
 
 export const outfitSwap = async (target: ImageData, outfit: ImageData): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
   
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash-image',
@@ -38,7 +38,7 @@ export const outfitSwap = async (target: ImageData, outfit: ImageData): Promise<
 };
 
 export const editImageWithText = async (image: ImageData, prompt: string): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
   
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash-image',
