@@ -2,77 +2,88 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# AI Outfit Studio
+# AI Outfit Studio (Fullstack Version)
 
-Aplikasi web bertenaga AI untuk mengganti outfit dalam foto dan mengedit gambar menggunakan perintah teks, didukung oleh Google Gemini (via Google GenAI SDK).
+Aplikasi web bertenaga AI untuk mengganti outfit dalam foto dan mengedit gambar, didukung oleh Google Gemini. Project ini menggunakan arsitektur Fullstack (React Frontend + Node.js/Express Backend).
+
+## Struktur Project
+
+- `client/`: Frontend React + Vite.
+- `server/`: Backend Node.js + Express (Menangani API Gemini & Serving Static Files).
 
 ## Persyaratan Sistem
 
-- Node.js (v18 atau lebih baru direkomendasikan)
-- NPM (biasanya terinstall bersama Node.js)
-- API Key Google Gemini (Dapatkan di [Google AI Studio](https://aistudio.google.com/))
+- Node.js (v18+)
+- NPM
+- API Key Google Gemini
 
 ## Instalasi & Menjalankan Lokal
 
-1.  **Clone repository** (jika belum):
-    ```bash
-    git clone <repository-url>
-    cd <repository-folder>
-    ```
-
-2.  **Install dependencies:**
+1.  **Install Dependencies:**
+    Jalankan perintah ini di root folder untuk menginstall dependencies client dan server:
     ```bash
     npm install
+    npm run postinstall
     ```
 
-3.  **Konfigurasi Environment:**
-    - Buat file `.env` (atau `.env.local`) di root project.
-    - Salin isi dari `.env.example` atau tambahkan baris berikut:
-      ```env
-      GEMINI_API_KEY=your_actual_api_key_here
+2.  **Konfigurasi Backend:**
+    - Masuk ke folder `server`:
+      ```bash
+      cd server
+      cp .env.example .env
       ```
-    > **PENTING:** Jangan pernah commit file `.env` atau `.env.local` yang berisi API Key asli ke version control.
+    - Edit file `.env` dan masukkan `GEMINI_API_KEY` Anda.
 
-4.  **Jalankan aplikasi:**
-    ```bash
-    npm run dev
-    ```
-    Aplikasi akan berjalan di `http://localhost:3000` (atau port lain yang tersedia).
-
-## Deployment
-
-Aplikasi ini adalah Single Page Application (SPA) berbasis Vite + React.
-
-### Deploy ke Vercel (Disarankan)
-
-Repository ini sudah dilengkapi dengan konfigurasi `vercel.json`.
-
-1.  Push kode ke GitHub/GitLab/Bitbucket.
-2.  Import project ke Vercel.
-3.  Di pengaturan Vercel, tambahkan Environment Variable:
-    - Name: `GEMINI_API_KEY`
-    - Value: `API_KEY_ANDA`
-4.  Deploy!
-
-### Deploy Manual / VPS
-
-1.  **Build aplikasi:**
+3.  **Build Frontend:**
+    Kembali ke root dan build frontend:
     ```bash
     npm run build
     ```
-    Hasil build akan berada di folder `dist/`.
 
-2.  **Serve folder `dist/`:**
-    Anda bisa menggunakan web server apa saja (Nginx, Apache, serve).
-    Contoh menggunakan `serve`:
+4.  **Jalankan Server:**
     ```bash
-    npm install -g serve
-    serve -s dist
+    npm start
     ```
+    Aplikasi akan berjalan di `http://localhost:3000`.
 
-## ⚠️ Peringatan Keamanan
+## Deployment ke VPS (aaPanel)
 
-Aplikasi ini berjalan sepenuhnya di sisi klien (browser). Ini berarti **API Key Anda akan terekspos** ke pengguna yang menginspeksi network request atau source code.
+Project ini siap di-deploy menggunakan **Node.js Manager** atau **PM2** di aaPanel.
 
-- **Untuk penggunaan pribadi/demo:** Ini biasanya dapat diterima asalkan Anda menjaga URL tetap privat atau membatasi kuota API key.
-- **Untuk produksi publik:** Sangat disarankan untuk memindahkan logika pemanggilan API ke backend server (proxy) untuk menyembunyikan API Key Anda.
+### Langkah-langkah Deployment:
+
+1.  **Upload Code:** Upload seluruh folder project ke VPS Anda.
+2.  **Install Dependencies:**
+    Masuk ke terminal VPS, arahkan ke folder project, lalu jalankan:
+    ```bash
+    npm install
+    npm run postinstall
+    ```
+3.  **Setup Environment:**
+    Pastikan file `server/.env` sudah dibuat dan berisi API Key.
+4.  **Build Frontend:**
+    ```bash
+    npm run build
+    ```
+5.  **Jalankan dengan PM2:**
+    Anda bisa menggunakan konfigurasi `ecosystem.config.js` yang sudah disediakan.
+    ```bash
+    pm2 start ecosystem.config.js
+    ```
+    Atau jika menggunakan interface aaPanel:
+    - Tambahkan Node.js Project.
+    - Start script: `server/index.js` atau pilih `ecosystem.config.js` jika didukung manager.
+    - Port: 3000.
+
+### 6. Konfigurasi Nginx (Reverse Proxy)
+
+Agar aplikasi bisa diakses melalui domain (contoh: `domain-anda.com`), Anda perlu mengatur Reverse Proxy di Nginx.
+
+1.  Di aaPanel, buat **Website** baru (Website > Add Site).
+2.  Masukkan domain Anda.
+3.  Buka pengaturan website tersebut, lalu masuk ke tab **Config** (atau **Reverse Proxy**).
+4.  Jika menggunakan konfigurasi manual, salin isi dari file `nginx.conf.example` ke blok `server { ... }` konfigurasi Nginx Anda.
+    - Intinya adalah menambahkan baris `proxy_pass http://127.0.0.1:3000;`.
+
+### Catatan Keamanan
+API Key disimpan aman di server (`server/.env`) dan tidak terekspos ke browser pengguna.
